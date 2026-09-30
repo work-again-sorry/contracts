@@ -3581,12 +3581,13 @@ fn test_claim_yield_panics_on_insufficient_liquid() {
         &test_metadata_hash(&s.env),
     );
     let admin = stellar_access::ownable::get_owner(&s.env).unwrap();
-    s.env.mock_auths(&[soroban_sdk::testutils::AuthMock {
+    s.env.mock_auths(&[soroban_sdk::testutils::MockAuth {
         address: &admin,
-        invoke: &soroban_sdk::testutils::AuthInvocation {
+        invoke: &soroban_sdk::testutils::MockAuthInvoke {
             contract: &s.vault_address,
             fn_name: "fund_project",
             args: (&project_id, &(1_000_0000000i128 - yield_amount)).into_val(&s.env),
+            sub_invokes: &[],
         },
     }]);
     s.vault_client.fund_project(&project_id, &(1_000_0000000i128 - yield_amount));
@@ -3887,10 +3888,10 @@ fn test_bridge_mint_happy_path() {
     let recipient = Address::generate(&s.env);
 
     s.vault_client.set_bridge(&bridge);
-    s.env.mock_auths(&[soroban_sdk::testutils::AuthMock {
+    s.env.mock_auths(&[soroban_sdk::testutils::MockAuth {
         address: &bridge,
-        invoke: &soroban_sdk::testutils::AuthInvocation {
-            contract: s.vault_address.clone(),
+        invoke: &soroban_sdk::testutils::MockAuthInvoke {
+            contract: &s.vault_address,
             fn_name: "bridge_mint",
             args: (&recipient, &100_0000000i128).into_val(&s.env),
             sub_invokes: &[],
@@ -3911,10 +3912,10 @@ fn test_bridge_mint_rejects_non_positive_amount() {
     let recipient = Address::generate(&s.env);
 
     s.vault_client.set_bridge(&bridge);
-    s.env.mock_auths(&[soroban_sdk::testutils::AuthMock {
+    s.env.mock_auths(&[soroban_sdk::testutils::MockAuth {
         address: &bridge,
-        invoke: &soroban_sdk::testutils::AuthInvocation {
-            contract: s.vault_address.clone(),
+        invoke: &soroban_sdk::testutils::MockAuthInvoke {
+            contract: &s.vault_address,
             fn_name: "bridge_mint",
             args: (&recipient, &0i128).into_val(&s.env),
             sub_invokes: &[],
