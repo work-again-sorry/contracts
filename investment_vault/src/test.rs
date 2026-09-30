@@ -2678,7 +2678,7 @@ fn test_all_only_owner_functions_reject_non_admin_caller() {
         s.vault_client
             .try_set_trusted_emitter(&1u32, &hash32, &true)
             .is_err(),
-        s.vault_client.try_set_flash_loan_fee(&1i128).is_err(),
+        s.vault_client.try_set_flash_loan_fee(&1u32).is_err(),
         s.vault_client.try_set_carbon_oracle(&addr()).is_err(),
         s.vault_client
             .try_set_max_transaction_amount(&1i128)
@@ -3250,7 +3250,7 @@ fn test_flash_loan_succeeds_with_valid_same_transaction_repayment() {
     let initiator = Address::generate(&s.env);
 
     // Set a 10 bps flash-loan fee so the fee path is exercised.
-    s.vault_client.set_flash_loan_fee(&10i128);
+    s.vault_client.set_flash_loan_fee(&10u32);
 
     let loan_amount = 1_000_0000000i128;
 
